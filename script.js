@@ -345,6 +345,7 @@ function noise() {
       currentImage.getWidth(),
       currentImage.getHeight(),
     );
+    alert('Noise filter may take some time.');
     var w = currentImage.getWidth();
     var h = currentImage.getHeight();
     for (var pix of tempImage.values()) {
@@ -362,44 +363,46 @@ function noise() {
   }
 }
 
-function average(img, x, y, which) {
-  var total = 0;
+function average(img, x, y) {
   var count = 0;
-  var far = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+  var far = [-3, -2, -1, 0, 1, 2, 3];
   var h = img.getHeight();
   var w = img.getWidth();
+  var avgRGB = {
+    r: 0,
+    g: 0,
+    b: 0,
+  };
+
   for (var i of far) {
     for (var m of far) {
       if (!(x + i < 0 || x + i >= w || y + m < 0 || y + m >= h)) {
-        if (which === 'r') {
-          total += img.getPixel(x + i, y + m).getRed();
-        } else if (which === 'g') {
-          total += img.getPixel(x + i, y + m).getGreen();
-        } else if (which === 'b') {
-          total += img.getPixel(x + i, y + m).getBlue();
-        } else {
-          console.log("which variable takes 'r' or 'g' or 'b'");
-        }
+        avgRGB.r += img.getPixel(x + i, y + m).getRed();
+        avgRGB.g += img.getPixel(x + i, y + m).getGreen();
+        avgRGB.b += img.getPixel(x + i, y + m).getBlue();
         count += 1;
       }
     }
   }
-  return total / count;
+  avgRGB.r = avgRGB.r / count;
+  avgRGB.g = avgRGB.g / count;
+  avgRGB.b = avgRGB.b / count;
+  return avgRGB;
 }
 
 function blurring() {
   //initally named blur but didn't respond to click
   if (check()) {
     tempImage = new SimpleImage(currentImage);
-    alert(
-      'Please wait while the image is being blurred. This may take some time depending on the size of the image',
-    );
+    alert('Blurring may take some time.');
+
     for (var p of tempImage.values()) {
       var x = p.getX();
       var y = p.getY();
-      p.setRed(average(tempImage, x, y, 'r'));
-      p.setGreen(average(tempImage, x, y, 'g'));
-      p.setBlue(average(tempImage, x, y, 'b'));
+      var avg = average(tempImage, x, y);
+      p.setRed(avg.r);
+      p.setGreen(avg.g);
+      p.setBlue(avg.b);
     }
     tempImage.drawTo(imgcanvas);
   }
