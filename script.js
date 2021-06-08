@@ -208,25 +208,30 @@ function makeViolet(pix, avg) {
   }
 }
 
-var r = 255; //default color for trigonometry: tomato
-var g = 99;
-var b = 71;
-var den = 120; //all initial value of ranges
-var amp = 1;
-var gap = 6;
+//default color for trigonometry: tomato
+var r = parseInt(document.getElementById('color').value.substring(1, 3), 16);
+var g = parseInt(document.getElementById('color').value.substring(3, 5), 16);
+var b = parseInt(document.getElementById('color').value.substring(5, 7), 16);
+//initial values from ranges
+var den = document.getElementById('density').value;
+var amp =
+  document.getElementById('amplitude').value /
+  document.getElementById('amplitude').max;
+var gap = document.getElementById('gap').value;
+var ceiling_floor = null;
 
-function checkPix(x, y, a, h) {
+function checkPix(x, y, a, d) {
   if (y < a + (Math.sin((x * Math.PI) / den) * amp * 3 * a) / 4) {
     return true;
   }
-  if (y > h - a + (Math.sin((x * Math.PI) / den) * amp * 3 * a) / 4) {
+  if (y > d - a + (Math.sin((x * Math.PI) / den) * amp * 3 * a) / 4) {
     return true;
   } else {
     return false;
   }
 }
 
-function trigonometry() {
+function trigonometry_cf() {
   if (check()) {
     tempImage = new SimpleImage(currentImage);
     var h = tempImage.getHeight();
@@ -238,6 +243,23 @@ function trigonometry() {
       }
     }
     tempImage.drawTo(imgcanvas);
+    ceiling_floor = true;
+  }
+}
+
+function trigonometry_lr() {
+  if (check()) {
+    tempImage = new SimpleImage(currentImage);
+    var w = tempImage.getWidth();
+    for (var pix of tempImage.values()) {
+      if (checkPix(pix.getY(), pix.getX(), w / gap, w)) {
+        pix.setRed(r);
+        pix.setGreen(g);
+        pix.setBlue(b);
+      }
+    }
+    tempImage.drawTo(imgcanvas);
+    ceiling_floor = false;
   }
 }
 
@@ -247,14 +269,22 @@ function changeColor() {
     r = parseInt(hex.substring(1, 3), 16);
     g = parseInt(hex.substring(3, 5), 16);
     b = parseInt(hex.substring(5, 7), 16);
-    trigonometry();
+    if (ceiling_floor) {
+      trigonometry_cf();
+    } else {
+      trigonometry_lr();
+    }
   }
 }
 
 function changeDensity() {
   if (check() && checkTemp()) {
     den = document.getElementById('density').value;
-    trigonometry();
+    if (ceiling_floor) {
+      trigonometry_cf();
+    } else {
+      trigonometry_lr();
+    }
   }
 }
 
@@ -262,17 +292,126 @@ function changeAmp() {
   if (check() && checkTemp()) {
     var sld = document.getElementById('amplitude');
     amp = sld.value / sld.max;
-    trigonometry();
+    if (ceiling_floor) {
+      trigonometry_cf();
+    } else {
+      trigonometry_lr();
+    }
   }
 }
 
 function changeGap() {
   if (check() && checkTemp()) {
     gap = document.getElementById('gap').value;
-    trigonometry();
+    if (ceiling_floor) {
+      trigonometry_cf();
+    } else {
+      trigonometry_lr();
+    }
   }
 }
 
-function noise() {}
+function randomInt() {
+  return -Math.floor(Math.random() * 10); //maximum 10 pix away to both sides
+}
 
-function blur() {}
+function check_X(w, x, num) {
+  if (x + num < 0) {
+    num = num + 1;
+    return check_X(x, num);
+  } else if (x + num >= w) {
+    num = num - 1;
+    return check_X(x, num);
+  } else {
+    return num;
+  }
+}
+
+function check_Y(h, y, num) {
+  if (y + num < 0) {
+    num = num + 1;
+    return check_Y(y, num);
+  } else if (y + num >= h) {
+    num = num - 1;
+    return check_Y(y, num);
+  } else {
+    return num;
+  }
+}
+
+function noise() {
+  if (check()) {
+    tempImage = new SimpleImage(
+      currentImage.getWidth(),
+      currentImage.getHeight(),
+    );
+    var w = currentImage.getWidth();
+    var h = currentImage.getHeight();
+    for (var pix of tempImage.values()) {
+      var x = pix.getX();
+      var y = pix.getY();
+      if (Math.random() < 0.5) {
+        tempImage.setPixel(x, y, currentImage.getPixel(x, y));
+      } else {
+        var x_away = check_X(w, x, randomInt());
+        var y_away = check_Y(h, y, randomInt());
+        tempImage.setPixel(x, y, currentImage.getPixel(x + x_away, y + y_away));
+      }
+    }
+    tempImage.drawTo(imgcanvas);
+  }
+}
+
+function average(img, x, y, which) {
+  var total = 0;
+  var count = 0;
+  var far = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+  var h = img.getHeight();
+  var w = img.getWidth();
+  for (var i of far) {
+    for (var m of far) {
+      if (!(x + i < 0 || x + i >= w || y + m < 0 || y + m >= h)) {
+        if (which === 'r') {
+          total += img.getPixel(x + i, y + m).getRed();
+        } else if (which === 'g') {
+          total += img.getPixel(x + i, y + m).getGreen();
+        } else if (which === 'b') {
+          total += img.getPixel(x + i, y + m).getBlue();
+        } else {
+          console.log("which variable takes 'r' or 'g' or 'b'");
+        }
+        count += 1;
+      }
+    }
+  }
+  return total / count;
+}
+
+function blurring() {
+  //initally named blur but didn't respond to click
+  if (check()) {
+    tempImage = new SimpleImage(currentImage);
+    alert(
+      'Please wait while the image is being blurred. This may take some time depending on the size of the image',
+    );
+    for (var p of tempImage.values()) {
+      var x = p.getX();
+      var y = p.getY();
+      p.setRed(average(tempImage, x, y, 'r'));
+      p.setGreen(average(tempImage, x, y, 'g'));
+      p.setBlue(average(tempImage, x, y, 'b'));
+    }
+    tempImage.drawTo(imgcanvas);
+  }
+}
+
+function fade() {
+  if (check()) {
+    var degree = 255 - document.getElementById('fade').value;
+    tempImage = new SimpleImage(currentImage);
+    for (var pix of tempImage.values()) {
+      pix.setAlpha(degree);
+    }
+    tempImage.drawTo(imgcanvas);
+  }
+}

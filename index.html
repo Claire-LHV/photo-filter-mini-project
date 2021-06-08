@@ -31,16 +31,37 @@
           onclick="rainbow_v()"
         />
         <input type="button" value="Noise" onclick="noise()" />
-        <input type="button" value="Blur" onclick="blur()" />
+        <input type="button" value="Blur" onclick="blurring()" />
       </div>
 
       <div>
-        <input type="button" value="Trigonometry" onclick="trigonometry()" />
+        <input type="button" value="Fade" onclick="fade()" />
+        <input
+          type="range"
+          id="fade"
+          min="0"
+          max="255"
+          value="55"
+          oninput="fade()"
+        />
+      </div>
+
+      <div>
+        <input
+          type="button"
+          value="Trigonometry_cf"
+          onclick="trigonometry_cf()"
+        />
+        <input
+          type="button"
+          value="Trigonometry_lr"
+          onclick="trigonometry_lr()"
+        />
         <input
           type="color"
           value="#FF6347"
           id="color"
-          onchange="changeColor()"
+          onchange="trigonometry()"
         />
         <input
           type="range"
