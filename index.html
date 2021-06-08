@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>photo fun mini-project</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js"></script>
+  </head>
+
+  <body>
+    <h1>Photo filter mini-project</h1>
+    <canvas id="can"> </canvas>
+    <div>
+      <input
+        type="file"
+        mutiple="false"
+        accept="image/*"
+        id="uploadimage"
+        onchange="upload()"
+      />
+
+      <div>
+        <input type="button" value="Black & White filter" onclick="BnW()" />
+        <input
+          type="button"
+          value="Horizontal Rainbow filter"
+          onclick="rainbow_h()"
+        />
+        <input
+          type="button"
+          value="Vertical Rainbow filter"
+          onclick="rainbow_v()"
+        />
+        <input type="button" value="Noise" onclick="noise()" />
+        <input type="button" value="Blur" onclick="blur()" />
+      </div>
+
+      <div>
+        <input type="button" value="Trigonometry" onclick="trigonometry()" />
+        <input
+          type="color"
+          value="#FF6347"
+          id="color"
+          onchange="changeColor()"
+        />
+        <input
+          type="range"
+          min="10"
+          max="360"
+          value="120"
+          id="density"
+          oninput="changeDensity()"
+        />
+        <input
+          type="range"
+          min="0"
+          max="80"
+          value="80"
+          id="amplitude"
+          oninput="changeAmp()"
+        />
+        <input
+          type="range"
+          min="2"
+          max="10"
+          value="6"
+          id="gap"
+          oninput="changeGap()"
+        />
+      </div>
+
+      <div></div>
+
+      <div>
+        <input
+          type="button"
+          value="Remove unapplied current filter"
+          onclick="removeFilter()"
+        />
+        <input
+          type="button"
+          value="Apply current filter"
+          onclick="applyFilter()"
+        />
+        <input type="button" value="Reset all" onclick="reset()" />
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

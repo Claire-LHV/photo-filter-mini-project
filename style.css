@@ -1,0 +1,16 @@
+canvas {
+  border: 1px solid LightGray;
+  /* just a view, not real width */
+  width: 600px;
+}
+
+body {
+  font-size: 20px;
+  background: url('https://i.pinimg.com/736x/fe/88/80/fe88800962480b9e11e0884169ef9c95.jpg');
+  background-size: cover;
+}
+
+input[type='button'] {
+  font-size: 20px;
+  margin: 10px;
+}
