@@ -365,7 +365,7 @@ function noise() {
 
 function average(img, x, y) {
   var count = 0;
-  var far = [-3, -2, -1, 0, 1, 2, 3];
+  const pixAway = 3;
   var h = img.getHeight();
   var w = img.getWidth();
   var avgRGB = {
@@ -374,8 +374,8 @@ function average(img, x, y) {
     b: 0,
   };
 
-  for (var i of far) {
-    for (var m of far) {
+  for (var i = -pixAway; i <= pixAway; i++) {
+    for (var m = -pixAway; m <= pixAway; m++) {
       if (!(x + i < 0 || x + i >= w || y + m < 0 || y + m >= h)) {
         avgRGB.r += img.getPixel(x + i, y + m).getRed();
         avgRGB.g += img.getPixel(x + i, y + m).getGreen();
