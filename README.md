@@ -3,6 +3,9 @@
 
 [![Deploy to Heroku](https://github.com/Claire-LHV/photo-filter-mini-project/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/Claire-LHV/photo-filter-mini-project/actions/workflows/deploy.yml)
 
+Link to the app
+[photo-filter-mini-project](https://photo-filter-mini.herokuapp.com/)
+
 ## About
 The app lets users to upload an image, apply filters and modify some of the filters. <br><br>
 The filters include:

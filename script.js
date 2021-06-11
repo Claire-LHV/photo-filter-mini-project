@@ -271,6 +271,8 @@ function changeColor() {
     b = parseInt(hex.substring(5, 7), 16);
     if (ceiling_floor) {
       trigonometry_cf();
+    } else if (ceiling_floor === null) {
+      alert('Choose a trigonometry option first.');
     } else {
       trigonometry_lr();
     }
@@ -282,6 +284,8 @@ function changeDensity() {
     den = document.getElementById('density').value;
     if (ceiling_floor) {
       trigonometry_cf();
+    } else if (ceiling_floor === null) {
+      alert('Choose a trigonometry option first.');
     } else {
       trigonometry_lr();
     }
@@ -294,6 +298,8 @@ function changeAmp() {
     amp = sld.value / sld.max;
     if (ceiling_floor) {
       trigonometry_cf();
+    } else if (ceiling_floor === null) {
+      alert('Choose a trigonometry option first.');
     } else {
       trigonometry_lr();
     }
@@ -305,6 +311,8 @@ function changeGap() {
     gap = document.getElementById('gap').value;
     if (ceiling_floor) {
       trigonometry_cf();
+    } else if (ceiling_floor === null) {
+      alert('Choose a trigonometry option first.');
     } else {
       trigonometry_lr();
     }
